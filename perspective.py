@@ -1,13 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider, CheckButtons
+from matplotlib.widgets import Slider, CheckButtons, Button
 
 i = np.zeros(4)
 j = np.zeros(4)
 k = np.zeros(4)
 
-fig, ax = plt.subplots()
-fig.subplots_adjust(right=0.75)
+fig, ax = plt.subplots(figsize=(13, 8))
+fig.subplots_adjust(left=0.02, right=0.72, bottom=0.15, top=0.98)
 
 ax.set_xlim(-10, 10)
 ax.set_ylim(-10, 10)
@@ -95,6 +95,72 @@ kv_jw_dot = ax.scatter(0, 0, color='black', zorder=3)
 iv_ju_k, = ax.plot([], [], color='gray', linestyle='dashed', zorder=3)
 iw_ku_j, = ax.plot([], [], color='gray', linestyle='dashed', zorder=3)
 kv_jw_i, = ax.plot([], [], color='gray', linestyle='dashed', zorder=3)
+
+# Examples
+
+examples = {
+  "One point": (
+    [(slider_j_x, 0), (slider_j_y, 5),
+     (slider_i_theta, 0), (slider_k_theta, 1.5 * np.pi),
+     (slider_a_x, -4), (slider_a_y, -2)],
+    [True, False, True]),
+  "Two point": (
+    [(slider_i_x, -9), (slider_i_y, 4), (slider_j_x, 9), (slider_j_y, 4),
+     (slider_k_theta, 1.5 * np.pi),
+     (slider_a_x, 0), (slider_a_y, -2)],
+    [False, False, True]),
+  "Three point": (
+    [(slider_i_x, -8), (slider_i_y, 5), (slider_j_x, 8), (slider_j_y, 5),
+     (slider_k_x, 0), (slider_k_y, -10),
+     (slider_a_x, 0), (slider_a_y, 0)],
+    [False, False, False]),
+  "Isometric": (
+    [(slider_i_theta, 7 * np.pi / 6), (slider_j_theta, 11 * np.pi / 6),
+     (slider_k_theta, 1.5 * np.pi),
+     (slider_a_x, 0), (slider_a_y, 3)],
+    [True, True, True]),
+  "Worm's eye": (
+    [(slider_i_x, -8), (slider_i_y, -5), (slider_j_x, 8), (slider_j_y, -5),
+     (slider_k_x, 0), (slider_k_y, 10),
+     (slider_a_x, 0), (slider_a_y, -8)],
+    [False, False, False]),
+  "Dimetric": (
+    [(slider_i_theta, np.radians(195)), (slider_j_theta, np.radians(345)),
+     (slider_k_theta, 1.5 * np.pi),
+     (slider_a_x, 0), (slider_a_y, 3)],
+    [True, True, True]),
+  "Oblique": (
+    [(slider_i_theta, 0), (slider_j_theta, np.pi / 4),
+     (slider_k_theta, 1.5 * np.pi),
+     (slider_a_x, -3), (slider_a_y, 2)],
+    [True, True, True]),
+  "Wide angle": (
+    [(slider_i_x, -4), (slider_i_y, 2), (slider_j_x, 4), (slider_j_y, 2),
+     (slider_k_theta, 1.5 * np.pi),
+     (slider_a_x, 0), (slider_a_y, -4)],
+    [False, False, True]),
+}
+
+fig.text(0.02, 0.09, "Examples:", fontsize=11)
+
+buttons_per_row = 4
+buttons = []
+for n, name in enumerate(examples):
+  row, col = divmod(n, buttons_per_row)
+  b_ax = fig.add_axes([0.10 + col * 0.155, 0.075 - row * 0.055, 0.14, 0.045])
+  b = Button(b_ax, name)
+  b.on_clicked(lambda _, name=name: load_preset(name))
+  buttons.append(b)
+
+def load_preset(name):
+  values, infs = examples[name]
+  for check, state in zip([check_i, check_j, check_k], infs):
+    if check.get_status()[0] != state:
+      check.set_active(0)
+  for slider, val in values:
+    slider.set_val(val)
+  for slider in [slider_u, slider_v, slider_w]:
+    slider.set_val(0.5)
 
 def intersect(p1, p2, p3, p4):
   """Where line_one crosses line_two, or None if parallel"""

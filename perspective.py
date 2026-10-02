@@ -117,24 +117,24 @@ examples = {
      (slider_a_x, 0), (slider_a_y, 0)],
     [False, False, False]),
   "Isometric": (
-    [(slider_i_theta, 7 * np.pi / 6), (slider_j_theta, 11 * np.pi / 6),
+    [(slider_i_theta, 5 * np.pi / 6), (slider_j_theta, np.pi / 6),
      (slider_k_theta, 1.5 * np.pi),
-     (slider_a_x, 0), (slider_a_y, 3)],
+     (slider_a_x, 0), (slider_a_y, 0), (slider_w, 0.7)],
     [True, True, True]),
   "Worm's eye": (
     [(slider_i_x, -8), (slider_i_y, -5), (slider_j_x, 8), (slider_j_y, -5),
      (slider_k_x, 0), (slider_k_y, 10),
-     (slider_a_x, 0), (slider_a_y, -8)],
+     (slider_a_x, 0), (slider_a_y, -2), (slider_w, 0.4)],
     [False, False, False]),
   "Dimetric": (
-    [(slider_i_theta, np.radians(195)), (slider_j_theta, np.radians(345)),
+    [(slider_i_theta, np.radians(165)), (slider_j_theta, np.radians(15)),
      (slider_k_theta, 1.5 * np.pi),
-     (slider_a_x, 0), (slider_a_y, 3)],
+     (slider_a_x, 0), (slider_a_y, 0)],
     [True, True, True]),
   "Oblique": (
-    [(slider_i_theta, 0), (slider_j_theta, np.pi / 4),
+    [(slider_i_theta, np.pi), (slider_j_theta, np.pi / 4),
      (slider_k_theta, 1.5 * np.pi),
-     (slider_a_x, -3), (slider_a_y, 2)],
+     (slider_a_x, 2), (slider_a_y, 0)],
     [True, True, True]),
   "Wide angle": (
     [(slider_i_x, -4), (slider_i_y, 2), (slider_j_x, 4), (slider_j_y, 2),

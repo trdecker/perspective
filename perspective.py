@@ -21,10 +21,10 @@ x_range = np.array([-10, 10])
 y_range = np.array([-10, 10])
 z_range = np.array([-10, 10])
 
-i_start = np.array([-5, 5])
-j_start = np.array([5, 5])
-k_start = np.array([0, -5])
-a_start = np.array([0, 0])
+i_start = np.array([-5, 0])
+j_start = np.array([5, 0])
+k_start = np.array([0, -10])
+a_start = np.array([0, -5])
 
 u_v_w_range = np.array([0, 1])
 
@@ -84,7 +84,26 @@ j_w, = ax.plot([], [], color='black', linewidth=2, zorder=3)
 k_u, = ax.plot([], [], color='black', linewidth=2, zorder=3)
 k_v, = ax.plot([], [], color='black', linewidth=2, zorder=3)
 
+iv_ju_dot = ax.scatter(0, 0, color='black', zorder=3)
+iw_ku_dot = ax.scatter(0, 0, color='black', zorder=3)
+kv_jw_dot = ax.scatter(0, 0, color='black', zorder=3)
+
+iv_ju_k, = ax.plot([], [], color='black', zorder=3)
+iw_ku_j, = ax.plot([], [], color='black', zorder=3)
+kv_jw_i, = ax.plot([], [], color='black', zorder=3)
+
 # line, = ax.plot([0, 0, 0, 0, 0], [0, 0, 0, 0, 0], color='black', linewidth=2)
+
+def intersect(p1, p2, p3, p4):
+  """Where line_one crosses line_two, or None if parallel"""
+  (x1, y1), (x2, y2), (x3, y3), (x4, y4) = p1, p2, p3, p4
+  denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+  if abs(denom) < 1e-12:
+    return None
+  a = x1 * y2 - y1 * x2
+  b = x3 * y4 - y3 * x4
+  return ((a * (x3 - x4) - (x1 - x2) * b) / denom,
+    (a * (y3 - y4) - (y1 - y2) * b) / denom)
  
 def update(_):
   # Update dot values
@@ -141,6 +160,21 @@ def update(_):
   w_y =  a_y + w_pos * (k_y - a_y)
   w_dot.set_offsets([w_x, w_y])
 
+  # Find interesects and draw lines to vanishing points
+  i_p, j_p, k_p = (i_x, i_y), (j_x, j_y), (k_x, k_y)
+  u_p, v_p, w_p = (u_x, u_y), (v_x, v_y), (w_x, w_y)
+
+  for dot, line, pts, target in [
+      (iv_ju_dot, iv_ju_k, (i_p, v_p, j_p, u_p), k_p),
+      (iw_ku_dot, iw_ku_j, (i_p, w_p, k_p, u_p), j_p),
+      (kv_jw_dot, kv_jw_i, (k_p, v_p, j_p, w_p), i_p)]:
+    p = intersect(*pts)
+    dot.set_visible(p is not None)
+    line.set_visible(p is not None)
+    if p is not None:
+      dot.set_offsets([p])
+      line.set_data([p[0], target[0]], [p[1], target[1]])
+
   # Update lines
   i_line.set_data([a_x, i_x], [a_y, i_y])
   j_line.set_data([a_x, j_x], [a_y, j_y])
@@ -167,10 +201,11 @@ def update(_):
   # Draw canvas
   fig.canvas.draw_idle()
 
-def toggle(check, slider):
+def toggle(check, sliders):
   checked = check.get_status()[0]
-  slider.set_active(not checked)
-  slider.poly.set_alpha(0.4 if checked else 1)
+  for slider in sliders:
+    slider.set_active(not checked)
+    slider.poly.set_alpha(0.4 if checked else 1)
   update(None)
   fig.canvas.draw_idle()
 
@@ -192,9 +227,9 @@ slider_v.on_changed(update)
 slider_w.on_changed(update)
 
 # Check boxes
-# check_i.on_clicked(lambda _: toggle(check_i, slider_i))
-# check_j.on_clicked(lambda _: toggle(check_j, slider_j))
-# check_z.on_clicked(lambda _: toggle(check_z, slider_z))
+# check_i.on_clicked(lambda _: toggle(check_i, [slider_i_x, slider_i_y]))
+# check_j.on_clicked(lambda _: toggle(check_j, [slider_j_x, slider_j_y]))
+# check_k.on_clicked(lambda _: toggle(check_k, [slider_k_x, slider_k_y]))
 
 # slider_z.on_submit(lambda val:
 #                    x_1.set_offsets([]))

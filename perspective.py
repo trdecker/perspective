@@ -72,6 +72,8 @@ u_dot = ax.scatter(0, 0, color='black', zorder=4)
 v_dot = ax.scatter(0, 0, color='black', zorder=4)
 w_dot = ax.scatter(0, 0, color='black', zorder=4)
 
+f_dot = ax.scatter(0, 0, color='gray', zorder=3, s=20)
+
 # Lines
 i_line, = ax.plot([0, i_start[0]], [0, i_start[1]], color='red', linewidth=2, zorder=3)
 j_line, = ax.plot([0, j_start[0]], [0, j_start[1]], color='green', linewidth=2, zorder=3)
@@ -292,6 +294,14 @@ def update(_):
         line.set_data([p[0], p[0] + 1e6 * np.cos(theta)], [p[1], p[1] + 1e6 * np.sin(theta)])
       else:
         line.set_data([p[0], target[0]], [p[1], target[1]])
+
+  # Far corner: where the dashed lines cross
+  f = None
+  if iv_ju_k.get_visible() and iw_ku_j.get_visible():
+    f = intersect(*iv_ju_k.get_xydata(), *iw_ku_j.get_xydata())
+  f_dot.set_visible(f is not None)
+  if f is not None:
+    f_dot.set_offsets([f])
 
   # Update horizon
   if i_inf and j_inf:

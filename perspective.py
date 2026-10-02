@@ -92,9 +92,9 @@ iv_ju_dot = ax.scatter(0, 0, color='black', zorder=3)
 iw_ku_dot = ax.scatter(0, 0, color='black', zorder=3)
 kv_jw_dot = ax.scatter(0, 0, color='black', zorder=3)
 
-iv_ju_k, = ax.plot([], [], color='black', zorder=3)
-iw_ku_j, = ax.plot([], [], color='black', zorder=3)
-kv_jw_i, = ax.plot([], [], color='black', zorder=3)
+iv_ju_k, = ax.plot([], [], color='gray', linestyle='dashed', zorder=3)
+iw_ku_j, = ax.plot([], [], color='gray', linestyle='dashed', zorder=3)
+kv_jw_i, = ax.plot([], [], color='gray', linestyle='dashed', zorder=3)
 
 def intersect(p1, p2, p3, p4):
   """Where line_one crosses line_two, or None if parallel"""
